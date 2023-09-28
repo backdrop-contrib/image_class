@@ -36,7 +36,7 @@ function image_class_field_formatter_settings_summary_alter(&$summary, $context)
   $settings = $display['settings'];
 
   if (isset($settings['class']) && $settings['class']) {
-    $summary .= '<br />' . t('Class: @class', array('@class' => $settings['class']));
+    $summary .= '<br />' . t('Class: @class', array('@class' => check_plain($settings['class'])));
   }
 }
 
@@ -45,12 +45,11 @@ function image_class_field_formatter_settings_summary_alter(&$summary, $context)
  */
 function image_class_field_attach_view_alter(&$output, $context) {
   foreach (element_children($output) as $field_name) {
-    $element = $output[$field_name];
+    $element = &$output[$field_name];
 
     $view_modes = field_view_mode_settings($element['#entity_type'], $element['#bundle']);
 
     // Check whether set view mode has custom settings.
-
     if (isset($view_modes[$context['view_mode']]) && !$view_modes[$context['view_mode']]['custom_settings']) {
       $context['view_mode'] = 'default';
     }
@@ -58,33 +57,26 @@ function image_class_field_attach_view_alter(&$output, $context) {
     $instance = field_info_instance($element['#entity_type'], $field_name, $element['#bundle']);
 
     // Check whether view mode exists in the field instance.
-
     if (isset($instance['display'][$context['view_mode']])) {
       $display = $instance['display'][$context['view_mode']];
     }
     // If no view mode was specified it should be set to '_custom'
-
     // like in field_view_field().
-
     elseif ($context['view_mode'] == '_custom' && is_array($context['display'])) {
       $display = $context['display'];
     }
     // Otherwise we use the 'default' view mode.
-
     else {
       $display = $instance['display']['default'];
     }
 
     $settings = $display['settings'];
 
-    // Return if 'class' setting is not available.
-
-    if (!isset($settings['class'])) {
-      return;
-    }
-
-    foreach (element_children($element) as $delta) {
-      $element[$delta]['#item']['attributes']['class'] = $settings['class'];
+    // Only continue if 'class' setting is available.
+    if (isset($settings['class'])) {
+      foreach (element_children($element) as $delta) {
+        $element[$delta]['#item']['attributes']['class'] = check_plain($settings['class']);
+      }
     }
   }
 }
