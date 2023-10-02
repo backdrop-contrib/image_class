@@ -8,18 +8,18 @@ Install this module using the official Backdrop CMS instructions at https://docs
 
 Issues
 ------
-Bugs and feature requests should be reported in https://github.com/backdrop-contrib/image_class/issues
+Bugs and feature requests should be reported in the issue queue.
 
 Current Maintainers
 -------------------
-Laryn Kragt Bakker https://backdropcms.org/account/laryn
-Greg OToole https://github.com/gto1
+- Laryn Kragt Bakker https://backdropcms.org/account/laryn
+- Greg OToole https://github.com/gto1
 
 Credits
 -------
-Ported to Backdrop CMS by Greg OToole https://github.com/gto1
-Ported to Backdrop CMS by Laryn Kragt Bakker https://backdropcms.org/account/laryn
-Originally written for Drupal by Yanickoo https://www.drupal.org/u/yannickoo
+- Ported to Backdrop CMS by Greg OToole https://github.com/gto1
+- Ported to Backdrop CMS by Laryn Kragt Bakker https://backdropcms.org/account/laryn
+- Originally written for Drupal by Yanickoo https://www.drupal.org/u/yannickoo
 
 License
 -------
