@@ -19,13 +19,14 @@ function image_class_field_formatter_settings_form_alter(&$settings_form, $conte
   $display = $context['instance']['display'][$context['view_mode']];
   $settings = $display['settings'];
 
-  $settings_form['class'] = array(
-    '#title' => t('Classes'),
-    '#type' => 'textfield',
-    '#default_value' => $settings['class'] ?? '',
-    '#description' => t('Enter space separated classes which will be added to the %img element.', array('%img' => '<img>')),
-  );
-
+  if ($context['instance']['display'][$context['view_mode']]['type'] == 'image') {
+    $settings_form['class'] = array(
+      '#title' => t('Classes'),
+      '#type' => 'textfield',
+      '#default_value' => $settings['class'] ?? '',
+      '#description' => t('Enter space separated classes which will be added to the %img element.', array('%img' => '<img>')),
+    );
+  }
 }
 
 /**
@@ -35,8 +36,10 @@ function image_class_field_formatter_settings_summary_alter(&$summary, $context)
   $display = $context['instance']['display'][$context['view_mode']];
   $settings = $display['settings'];
 
-  if (isset($settings['class']) && $settings['class']) {
-    $summary .= '<br />' . t('Class: @class', array('@class' => check_plain($settings['class'])));
+  if ($context['instance']['display'][$context['view_mode']]['type'] == 'image') {
+    if (isset($settings['class']) && $settings['class']) {
+      $summary .= '<br />' . t('Class: @class', array('@class' => check_plain($settings['class'])));
+    }
   }
 }
 
@@ -71,11 +74,16 @@ function image_class_field_attach_view_alter(&$output, $context) {
     }
 
     $settings = $display['settings'];
+    $class = isset($settings['class']) ? trim($settings['class']) : FALSE;
 
     // Only continue if 'class' setting is available.
-    if (isset($settings['class'])) {
+    if (!empty($class)) {
       foreach (element_children($element) as $delta) {
-        $element[$delta]['#item']['attributes']['class'] = check_plain($settings['class']);
+        $classes_array = explode(' ', $class);
+        foreach ($classes_array as $key => $class_value) {
+          $classes_array[$key] = backdrop_html_class($class_value);
+        }
+        $element[$delta]['#item']['attributes']['class'] = $classes_array;
       }
     }
   }
